@@ -1,15 +1,14 @@
-require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require('cors');
 
 // routes
 const products = require("./routes/products.router");
-const users = require("./routes/users.router");
+const users = require("./routes/users.routes");
 const carts = require("./routes/carts.router");
 
 // middlewares
-const routeNotFoundHandler = require("./middlewares/route-error");
+const routeNotFoundHandler = require("./middlewares/route.error");
 const allErrorsHandler = require("./middlewares/all-error");
 
 // connection
@@ -21,10 +20,9 @@ const app = express();
 app.use(bodyParser.json())
 app.use(cors());
 
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 initializeConnectionToDb();
-
 app.get("/", (req,res)=>{
   res.send("Hello word!");
 })
@@ -40,6 +38,6 @@ app.use(routeNotFoundHandler);
 app.use(allErrorsHandler);
 
 
-app.listen( process.env.PORT || port, () => {
-    console.log(`server started`)
+app.listen( port, () => {
+    console.log(`server Online!`)
   })

@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const {Cart} = require("../models/cart.model");
-const {User} = require("../models/user.model");
+const {User} = require("../models/users.model");
 const {extend} = require("lodash");
 
 router.param("userid",async(req,res,next,id) => {
