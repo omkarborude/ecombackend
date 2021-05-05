@@ -1,25 +1,45 @@
-const express = require('express')
-
+require("dotenv").config();
+const express = require("express");
+const bodyParser = require("body-parser");
 const cors = require('cors');
 
-const app = express()
-app.use(express.json())
+// routes
+const products = require("./routes/products.router");
+const users = require("./routes/users.router");
+const carts = require("./routes/carts.router");
+
+// middlewares
+const routeNotFoundHandler = require("./middlewares/route-error");
+const allErrorsHandler = require("./middlewares/all-error");
+
+// connection
+const initializeConnectionToDb = require("./db/db.connect");
+
+
+const app = express();
+
+app.use(bodyParser.json())
 app.use(cors());
 
 const port = 3000;
-const products = require('./routes/products.router.js')
-const userRoutes = require('./routes/users.routes');
 
-const { initializeDBconnection } = require("./db/db.connect.js")
+initializeConnectionToDb();
 
-initializeDBconnection()
+app.get("/", (req,res)=>{
+  res.send("Hello word!");
+})
 
-app.use('/products',products);
-app.use('/users',userRoutes)
+app.use("/products", products);
+app.use("/users", users);
+app.use("/carts", carts);
 
-app.get('/', function(req, res) {
-   
-   res.json({hello: "world"})
-} )
 
-app.listen(process.env.PORT || port, () => console.log(`Example app listening at http://localhost:${port}`))
+app.use(routeNotFoundHandler);
+
+
+app.use(allErrorsHandler);
+
+
+app.listen( process.env.PORT || port, () => {
+    console.log(`server started`)
+  })

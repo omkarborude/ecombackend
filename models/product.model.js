@@ -37,13 +37,27 @@ const ProductSchema = new Schema({
     },
     
     rating : {
-        type: Number, default: 0
+        starRating: {type: Number, default: 0}, 
+        totalReviews: {type: Number, default: 0}
     },
     
     offer : {
         type: Number,
         default: 0
     },
+    
+    level : {
+        type: String
+    },
+    
+    avalQty: {
+        type: Number,
+        required: 'Available quantity information is required'
+    },
+    
+    url:{
+        type: String
+    }
 });
 
 const Product = mongoose.model("Product", ProductSchema);

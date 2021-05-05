@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const {User} = require("../models/users.model");
+const {User} = require("../models/user.model");
 const {extend} = require("lodash");
 const e = require("express");
 
@@ -19,7 +19,12 @@ router.route("/signup")
         const NewUser = new User(userData);
         const addedUserDataFromDb = await NewUser.save();
 
-        res.status(201).json({response: {firstname: addedUserDataFromDb.firstname, userId: addedUserDataFromDb._id}, success: true})
+        res.status(201).json({response: {
+           username: addedUserDataFromDb.username,
+           useremail:addedUserDataFromDb.email,
+           userId: addedUserDataFromDb._id}, 
+           success: true ,
+           message:" registerd successed ! "})
 
     }  catch(error){
         res.status(500).json({success:false, message: "Request failed please check errorMessage key for more details", errorMessage: error.message })
@@ -29,15 +34,21 @@ router.route("/signup")
 router.route("/login")
 .post( async(req,res)=>{
     try {
+        const email = req.body.email;
         const username = req.body.username;
         const password = req.body.password;
-        const user = await User.findOne({username});
+
+        const user = await User.findOne({email});
         
-         if(user.password === password){
-            res.status(200).json({response: 
-            {user: user.username, 
-            userId: user._id}, 
-            success: true});
+        if(!user){
+            res.status(401).json({success:false, message: "Username is incorrect!"});
+            return;
+        }else if(user.password === password){
+            res.status(200).json(
+              {response: 
+              {email: user.email,
+              username:user.username,
+              userId: user._id}, success: true});
             return;
         }
         res.status(401).json({ message : "Password is incorrect!", success : false });
@@ -63,11 +74,7 @@ router.route("/:username")
 .get( async(req,res)=>{
     try {
         const { user } = req;
-        res.status(200).json({ response :  
-        {username: user.username, 
-        email: user.email, 
-        userId: user._id}, 
-        success : true })
+        res.status(200).json({ response :  {username: user.username, firstname: user.firstname, lastname: user.lastname, userId: user._id}, success : true })
 
     }  catch(error){
         res.status(500).json({success:false, message: "Request failed please check errorMessage key for more details", errorMessage: error.message })

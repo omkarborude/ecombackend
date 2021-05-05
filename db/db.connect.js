@@ -1,10 +1,8 @@
-const mongoose = require("mongoose")
+const mongoose = require('mongoose');
 
-function initializeDBconnection() {
-    mongoose.connect("mongodb+srv://osbwifi:omkar@8354@neog-cluster.b9ili.mongodb.net/test", 
-    {useUnifiedTopology: true, useNewUrlParser: true})
-    .then(() => console.log("mongodb successfully connected"))
-    .catch(error => console.error("mongodb connection failed... ", error))
+const initializeConnectionToDb = async() =>{
+    await mongoose.connect('mongodb+srv://osbwifi:omkar@8354@neog-cluster.b9ili.mongodb.net/test', {useNewUrlParser: true, useUnifiedTopology: true})
+    console.log("db connected"); 
 }
 
-module.exports = { initializeDBconnection }
+module.exports = initializeConnectionToDb;
