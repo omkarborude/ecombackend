@@ -12,7 +12,7 @@ const routeNotFoundHandler = require("./middlewares/route.error");
 const allErrorsHandler = require("./middlewares/all-error");
 
 // connection
-const initializeConnectionToDb = require("./db/db.connect");
+const initializeConnectionDb = require("./db/db.connect");
 
 
 const app = express();
@@ -22,7 +22,7 @@ app.use(cors());
 
 const port = process.env.PORT || 3000;
 
-initializeConnectionToDb();
+initializeConnectionDb();
 app.get("/", (req,res)=>{
   res.send("Hello word!");
 })
